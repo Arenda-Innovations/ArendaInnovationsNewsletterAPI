@@ -8,5 +8,5 @@ CREATE TABLE IF NOT EXISTS potentialUsers (
 
 
 -- @block
-
+SELECT * FROM potentialUsers;
 -- @endblock

@@ -1,12 +1,12 @@
 {
   "name": "rendaapi",
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
-    "start": "tsc & node .",
-    "dev": "tsc -w & nodemon ."
+    "build": "esbuild src/index.js --bundle --platform=node --outfile=dist/index.js --minify",
+    "start": "node .",
+    "dev": "nodemon ."
   },
   "keywords": [],
   "author": "",
@@ -16,7 +16,9 @@
     "@sendgrid/mail": "^8.1.6",
     "csv": "^6.4.1",
     "dotenv": "^17.2.2",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "mysql2": "^3.15.1",
+    "tsc": "^2.0.4"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
