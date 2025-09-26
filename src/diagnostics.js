@@ -54,7 +54,7 @@ async function run(email, listId) {
   console.log('\nList members:');
   console.log(JSON.stringify(members.body || members, null, 2));
 
-  // Print a small diagnostic summary
+
   console.log('\nSummary:');
   if (contact.body && contact.body.result && contact.body.result.length >= 1) {
     const found = contact.body.result.find(c => c.email && c.email.toLowerCase() === email.toLowerCase());

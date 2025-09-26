@@ -134,4 +134,4 @@ async function getEmailbyId(id) {
   }
 }
 
-getEmailbyId('fkjd;ljkfds');
+export { updatePotentialUserEmail, addPotentialUserWithId, getPotentialUserByEmail, getEmailbyId};

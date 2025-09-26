@@ -1,20 +1,26 @@
 // const express = require('express');
 import express from 'express';
 import dotenv from 'dotenv';
-
+import sgMail from '@sendgrid/mail';
 import fs from 'fs/promises'
+
 const app = express();
 dotenv.config();
-const port = process.env.PORT ;
+const port = process.env.PORT || 3000;
+
+// Parse JSON and urlencoded request bodies
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// configure SendGrid
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 
 app.post('/', (req, res) => {
-  const sgMail = require('@sendgrid/mail');
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-  
-  
+  // sgMail is configured at module startup; use req.body safely now that
+  // body-parsing middleware is enabled.
   const msg = {
-    to: req.body.email, 
+  to: req.body?.email,
     from: 'arenda.innovations@gmail.com', 
     subject: 'Sending with SendGrid is Fun',
     text: 'and easy to do anywhere, even with Node.js',

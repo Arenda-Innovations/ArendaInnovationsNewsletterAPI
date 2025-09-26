@@ -1,15 +1,16 @@
 require('dotenv').config({ path: '.env' });
 const client = require("@sendgrid/client");
 const path = require('path');
+const { Pool } = require('pg');
 
 
 
 client.setApiKey(process.env.SENDGRID_API_KEY);
-/**
- * @param {string} email - The email address to add
- * @param {string} listId - The ID of the contact list
- * @returns {Promise<boolean>}
- */
+
+
+
+
+
 async function addEmailToList(email, listId="e293efbf-2462-4d4b-910a-36145fe80523") {
   const request = {
     url: `/v3/marketing/contacts`,
@@ -40,8 +41,7 @@ async function addEmailToList(email, listId="e293efbf-2462-4d4b-910a-36145fe8052
   }
 }
 
-// Export the function so other modules can require/import it without
-// triggering network requests during module initialization.
+
 module.exports = addEmailToList;
 if (require.main === module) {
   const args = process.argv.slice(2);
@@ -58,3 +58,41 @@ if (require.main === module) {
     process.exit(ok ? 0 : 1);
   })();
 }
+
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+});
+
+/**
+ * Adds the email of a potential user (by id) to the SendGrid contact list.
+ * @param {number} userId - The id of the user in the potentialUsers table.
+ * @param {string} [listId] - Optional SendGrid list ID.
+ * @returns {Promise<boolean>}
+ */
+async function addPotentialUserById(userId, listId) {
+    try {
+        const res = await pool.query(
+            'SELECT email FROM potentialUsers WHERE id = $1',
+            [userId]
+        );
+        if (res.rows.length === 0) {
+            console.error(`No user found with id ${userId}`);
+            return false;
+        }
+        const email = res.rows[0].email;
+        return await addEmailToList(email, listId);
+    } catch (err) {
+        console.error('Database error:', err.message);
+        return false;
+    }
+}
+
+
+
+
+
+
+
+
+
+module.exports.addPotentialUserById = addPotentialUserById;

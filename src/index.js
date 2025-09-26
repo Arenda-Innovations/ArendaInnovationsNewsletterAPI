@@ -1,18 +1,21 @@
 // const express = require('express');
 import express from 'express';
 import dotenv from 'dotenv';
-
+import { addPotentialUserById } from './addContact.js';
+import { addPotentialUserWithId } from './WriteToDatabase.js';
 import fs from 'fs/promises'
+import sgMail from '@sendgrid/mail';
 const app = express();
 dotenv.config();
 const port = process.env.PORT ;
 
 
+app.use(express.json()); 
 app.post('/', (req, res) => {
-  const sgMail = require('@sendgrid/mail');
+  
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   
-  
+  console.log(req.body.email);
   const msg = {
     to: req.body.email, 
     from: 'arenda.innovations@gmail.com', 
@@ -24,6 +27,7 @@ app.post('/', (req, res) => {
     .send(msg) 
     .then(() => {
       res.send('Email sent'+req.body);
+      addPotentialUserWithId(generateRandomId(), req.body.email);  
     })
     .catch((error) => {
       res.send('Error sending email: ' + error.message);
@@ -41,8 +45,6 @@ app.put('/', (req, res) => {
 });
 
 //This is the link that they will receive to confitm their email
-
-
 app.get('/', (req, res) => {
   res.send('<div>Confirm your email</div>');
 });
