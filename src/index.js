@@ -26,7 +26,7 @@ app.post('/', (req, res) => {
     from: 'arenda.innovations@gmail.com', 
     subject: 'Sending with SendGrid is Fun',
     text: 'and easy to do anywhere, even with Node.js',
-    html:`<a href="${process.env.LINK}?{chosenID}">Confirm your email</a>`,
+    html:`<a href="${process.env.LINK}?id=${chosenID}">Confirm your email</a>`,
   }
   sgMail
     .send(msg) 
